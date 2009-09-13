@@ -28,12 +28,23 @@ class DirectoryMoveTask < Rake::Task
   end
 
   def dst_dir()
-    @dst_dir ||= dst_dir_pathname.to_s
+    dst_dir_pathname.to_s
+  end
+
+  def dst_dir_parent_pathname()
+    dst_dir_pathname.parent
+  end
+
+  def dst_dir_parent
+    dst_dir_parent_pathname.to_s
   end
 
   def define_dependencies
-    puts "Definining task for creation of destination directory:\n\t'#{dst_dir}'"
-    directory(dst_dir)
+    directory(dst_dir_parent)
+
+    file(dst_dir => dst_dir_parent) do
+      FileUtils.mv(src_dir, dst_dir, :verbose => true)
+    end
 
     self.enhance([ dst_dir ])
   end
@@ -41,7 +52,7 @@ class DirectoryMoveTask < Rake::Task
 end
 
 def mv(src_root, dst_root, src_dir, &block)
-  mv_task = DirectoryMoveTask.define_task("Move of '#{src_dir}'", &block)
+  mv_task = DirectoryMoveTask.define_task("Moving of '#{src_dir}' to under '#{dst_root}'", &block)
   mv_task.src_root = src_root
   mv_task.dst_root = dst_root
   mv_task.src_dir = src_dir
