@@ -20,7 +20,7 @@ class Dir
       end
     end
 
-    results
+    results.flatten
   end
 
 end

@@ -27,11 +27,11 @@ class MusicFile
     size_in_kb / 1024.0
   end
 
-  def is_protected?()
+  def protected?()
     return true if type == :m4p
   end
 
-  def is_high_quality?()
+  def high_quality?()
 #    puts attributes.to_yaml
     return true if type == :flac
     return true if type == :m4a and size > 20.megabytes
